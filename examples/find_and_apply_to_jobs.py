@@ -106,10 +106,10 @@ async def upload_cv(index: int, browser: BrowserContext):
 
 
 browser = Browser(
-	config=BrowserConfig(
-		chrome_instance_path='/Applications/Google Chrome.app/Contents/MacOS/Google Chrome',
-		disable_security=True,
-	)
+    config=BrowserConfig(
+        headless=False,
+        disable_security=True,
+    )
 )
 
 
@@ -125,24 +125,27 @@ async def main():
 	ground_task = (
 		'You are a professional job finder. '
 		'1. Read my cv with read_cv'
-		'find ml internships in and save them to a file'
-		'search at company:'
+		'Use my LinkedIn credentials to log in and find and apply to software engineer jobs.'
+		'The only jobs you should apply for should be mid-level roles (2 to 4 years of experience required) AND the job title should include the words "frontend" or "fullstack" or "front end" or "full stack" or "front-end" or "full-stack.'
+		'You should NOT apply for hybrid or on-site or in-person or office-only roles unless they are based in New York City or Brooklyn.'
+		'If you need to upload a cv or resume and you need to find the correct upload button, look for a UI element with the button text "Upload file"'
+    f' The username is michael.chrupcala@gmail.com and the password is: {os.getenv("LINKEDIN_PASSWORD")}'
+	'After you finish filling out an application and you reach a page with the text "Review your application", you will need to click a button with the words "Submit application" to finish submitting this application.'
+	'If you reach the "review application" stage and you reach a screen or modal with "Save this application?" then click "Save" or "Yes" and continue.' 
+	'After you successfully apply for a job, search for another and continue to submit applications.'
 	)
 	tasks = [
-		ground_task + '\n' + 'Google',
+		ground_task + '\n' + 'LinkedIn',
 		# ground_task + '\n' + 'Amazon',
 		# ground_task + '\n' + 'Apple',
 		# ground_task + '\n' + 'Microsoft',
-		# ground_task
-		# + '\n'
-		# + 'go to https://nvidia.wd5.myworkdayjobs.com/en-US/NVIDIAExternalCareerSite/job/Taiwan%2C-Remote/Fulfillment-Analyst---New-College-Graduate-2025_JR1988949/apply/autofillWithResume?workerSubType=0c40f6bd1d8f10adf6dae42e46d44a17&workerSubType=ab40a98049581037a3ada55b087049b7 NVIDIA',
 		# ground_task + '\n' + 'Meta',
 	]
-	model = AzureChatOpenAI(
+	model = ChatOpenAI(
 		model='gpt-4o',
-		api_version='2024-10-21',
-		azure_endpoint=os.getenv('AZURE_OPENAI_ENDPOINT', ''),
-		api_key=SecretStr(os.getenv('AZURE_OPENAI_KEY', '')),
+		# api_version='2024-10-21',
+		# azure_endpoint=os.getenv('AZURE_OPENAI_ENDPOINT', ''),
+		# api_key=SecretStr(os.getenv('AZURE_OPENAI_KEY', '')),
 	)
 
 	agents = []
